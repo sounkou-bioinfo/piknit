@@ -48,7 +48,7 @@ reply <- pi_run("In one sentence, what is a coding agent?")
 reply
 ```
 
-    A coding agent is an AI system that helps you write, edit, run, and manage code by interacting with files, tools, and tests—like this assistant.
+    A coding agent is an AI assistant that can inspect, modify, run, and test code using tool-based actions to autonomously help implement or fix software.
 
 Point it at an extension (`extension = "path/to/index.ts"`) to give the
 agent tools. That is the whole embedding: `pi_run()` is one turn,
@@ -71,9 +71,11 @@ pi --model gpt-5.3-codex-spark -p \
   "In one sentence, what is literate programming?"
 ```
 
-> Literate programming is a style where you write code as part of a
-> human-readable document (with explanations) and then weave it into
-> executable code.
+> Literate programming is a software development style in which you
+> write programs as a human-readable narrative—interleaving explanation
+> and documentation with code so that the program is meant to be read
+> and understood as a piece of literature, not just executed by a
+> machine.
 
 ## The `pish` engine — fail-loud shell
 

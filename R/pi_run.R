@@ -50,7 +50,9 @@ pi_run <- function(prompt, model = NULL, provider = NULL, extension = NULL,
   } else {
     args <- c(args, "--session-id", session)
   }
-  args <- c(args, "-p", prompt)
+  # system2 with stdout/stderr = TRUE captures via a shell, which pastes args
+  # unquoted; shQuote keeps a prompt with (), quotes, etc. from breaking it.
+  args <- c(args, "-p", shQuote(prompt))
   out <- tryCatch(
     system2(pi_bin, args, stdout = TRUE, stderr = TRUE, timeout = timeout),
     error = function(e) "[pi unavailable]"
