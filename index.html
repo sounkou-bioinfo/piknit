@@ -74,7 +74,7 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">reply</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/pi_run.html">pi_run</a></span><span class="op">(</span><span class="st">"In one sentence, what is a coding agent?"</span><span class="op">)</span></span>
 <span><span class="va">reply</span></span></code></pre></div>
-<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>A coding agent is an AI system that helps you write, edit, run, and manage code by interacting with files, tools, and tests—like this assistant.</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>A coding agent is an AI assistant that can inspect, modify, run, and test code using tool<span class="sc">-</span>based actions to autonomously help implement or fix software.</span></code></pre></div>
 <p>Point it at an extension (<code>extension = "path/to/index.ts"</code>) to give the agent tools. That is the whole embedding: <code><a href="reference/pi_run.html">pi_run()</a></code> is one turn, <code><a href="reference/pi_session.html">pi_session()</a></code> is a memory-keeping conversation, and the knitr engines below are just these calls wired into a render.</p>
 </div>
 <div class="section level2">
@@ -87,7 +87,7 @@
 <div class="sourceCode" id="cb5"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="ex">pi</span> <span class="at">--model</span> gpt-5.3-codex-spark <span class="at">-p</span> <span class="dt">\</span></span>
 <span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="st">"In one sentence, what is literate programming?"</span></span></code></pre></div>
 <blockquote>
-<p>Literate programming is a style where you write code as part of a human-readable document (with explanations) and then weave it into executable code.</p>
+<p>Literate programming is a software development style in which you write programs as a human-readable narrative—interleaving explanation and documentation with code so that the program is meant to be read and understood as a piece of literature, not just executed by a machine.</p>
 </blockquote>
 </div>
 <div class="section level2">
