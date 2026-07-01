@@ -1,0 +1,102 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd — edit that file, then rmarkdown::render("README.Rmd"). -->
+
+# piknit
+
+<!-- badges: start -->
+[![License: GPL v2+](https://img.shields.io/badge/License-GPL%20v2%2B-blue.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
+<!-- badges: end -->
+
+**A way to embed the [Pi](https://github.com/earendil-works) coding agent in R.** Drive a live agent from R with a
+small scripting API — `pi_run()` for one turn, `pi_session()` for a memory-keeping multi-turn session — or drop it
+straight into R Markdown / Quarto through knitr engines that run a *live* agent (and fail-loud shell commands) at
+render time, weaving the agent's real replies and command output into the document. **Rendering becomes an
+integration test**: a stale claim or a broken command fails the build. Same idea as `leanknit` and `duckknit`,
+pointed at an agent.
+
+Two ways to use it:
+
+- **As an R binding** — `pi_run()` / `pi_session()` call a Pi agent from any R script, app, or pipeline; the agent
+  (with its tools and extensions) becomes a function you call and whose reply you keep.
+- **As literate engines** — ```` ```{pi} ```` and ```` ```{pish} ```` chunks put a live agent and fail-loud
+  commands into a rendered document.
+
+```{r setup, include = FALSE}
+library(piknit)
+knitr::opts_chunk$set(comment = "")
+```
+
+## Install
+
+```r
+# remotes::install_github("sounkou-bioinfo/piknit")
+library(piknit)
+```
+
+Needs the `pi` CLI on the `PATH`. Set defaults with `options(piknit.model=, piknit.provider=)` or the
+`PIKNIT_PI` env var.
+
+## Call the agent from R
+
+The agent is a function you call; its reply is a value you keep. Point it at an extension to give it tools:
+
+```r
+reply <- pi_run(
+  "Load examples/variant-counts/manifest.json and count variants by consequence.",
+  extension = "extensions/pi-coding-agent/index.ts"
+)
+cat(reply, sep = "\n")
+```
+
+That is the whole embedding: `pi_run()` is one turn, `pi_session()` is a memory-keeping conversation, and the
+knitr engines below are just these calls wired into a render.
+
+## The `pi` engine — the chunk body is the prompt
+
+Write a prompt in a ```` ```{pi} ```` chunk; at render time a live agent turn runs and its reply is woven in under
+the exact command used. A small, fast model (`gpt-5.3-codex-spark` by default) keeps a live turn to seconds.
+
+````
+```{pi}`r ''`
+In one sentence, what is literate programming?
+```
+````
+
+```{pi}
+In one sentence, what is literate programming?
+```
+
+## The `pish` engine — fail-loud shell
+
+Run a command; a non-zero exit **stops the render** (never bakes a failure as an answer), and JSON output is
+fenced for highlighting.
+
+````
+```{pish}`r ''`
+node --version
+```
+````
+
+## A persistent session across chunks
+
+`pi_session()` gives successive turns shared conversation memory (via a stable `--session-id`) without holding a
+long-lived process, so an earlier chunk's result is in scope later:
+
+```r
+s <- pi_session(extension = "extensions/pi-coding-agent/index.ts")
+s$ask("Load examples/variant-counts/manifest.json and count variants by consequence.")
+s$ask("Now express the same counts as percentages.")  # remembers the table above
+```
+
+## Why
+
+Docs that *run* don't drift. Pointing the render at a live agent turns a README, a vignette, or a tutorial into a
+real end-to-end test of the agent, its tools, and the claims you make about them — the discipline that caught
+real bugs while building [pi-bio-agent](https://github.com/sounkou-bioinfo/pi-bio-agent), piknit's first user.
+
+## License
+
+GPL (>= 2) © sounkou-bioinfo

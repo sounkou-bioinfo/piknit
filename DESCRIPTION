@@ -1,0 +1,27 @@
+Package: piknit
+Title: Embed the Pi Coding Agent in R
+Version: 0.1.0
+Authors@R:
+    person("Sounkou Mahamane", "Toure", email = "sounkoutoure@gmail.com",
+           role = c("aut", "cre"))
+Description: Embed the Pi coding agent in R. Drive a live agent from R with a
+    small scripting API - one turn with 'pi_run()', a multi-turn session that
+    keeps its memory with 'pi_session()' - or drop it straight into R Markdown
+    and Quarto through custom knitr engines that run a live agent (and
+    fail-loud command-line tools) at render time, weaving the agent's real
+    replies and tool output into the document. Rendering becomes an
+    integration test: a stale claim or a broken command fails the build.
+    Inspired by the leanknit and duckknit literate-engine packages.
+License: GPL (>= 2)
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Imports:
+    knitr,
+    utils
+Suggests:
+    rmarkdown,
+    tinytest
+URL: https://github.com/sounkou-bioinfo/piknit
+BugReports: https://github.com/sounkou-bioinfo/piknit/issues
+SystemRequirements: pi (the Pi coding agent CLI) available on the PATH
