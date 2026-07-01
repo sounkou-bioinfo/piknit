@@ -1,0 +1,25 @@
+url: https://sounkou-bioinfo.github.io/piknit/
+template:
+  bootstrap: 5
+
+reference:
+  - title: Embed the agent in R
+    desc: Drive a live Pi coding agent from R — one turn, a streaming turn, or a session.
+    contents:
+      - pi_run
+      - pi_stream
+      - pi_session
+  - title: The reply object
+    desc: The classed value an agent turn returns.
+    contents:
+      - pi_reply
+  - title: knitr engines
+    desc: Run a live agent (and fail-loud commands) inside a rendered document.
+    contents:
+      - register_engines
+  - title: Utilities
+    contents:
+      - wrap_prompt
+  - title: Package
+    contents:
+      - piknit-package

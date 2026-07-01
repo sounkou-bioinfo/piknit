@@ -21,6 +21,9 @@ Imports:
     utils
 Suggests:
     rmarkdown,
+    pkgdown,
+    processx,
+    jsonlite,
     tinytest
 URL: https://github.com/sounkou-bioinfo/piknit
 BugReports: https://github.com/sounkou-bioinfo/piknit/issues

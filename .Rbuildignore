@@ -5,3 +5,7 @@
 ^\.git$
 ^\.github$
 ^LICENSE\.md$
+^_pkgdown\.yml$
+^Makefile$
+^docs$
+^\.gitignore$

@@ -40,20 +40,20 @@ Needs the `pi` CLI on the `PATH`. Set defaults with
 
 ## Call the agent from R
 
-The agent is a function you call; its reply is a value you keep. Point
-it at an extension to give it tools:
+The agent is a function you call; its reply is a character vector you
+keep — run live when this README renders:
 
 ``` r
-reply <- pi_run(
-  "Load examples/variant-counts/manifest.json and count variants by consequence.",
-  extension = "extensions/pi-coding-agent/index.ts"
-)
-cat(reply, sep = "\n")
+reply <- pi_run("In one sentence, what is a coding agent?")
+reply
 ```
 
-That is the whole embedding: `pi_run()` is one turn, `pi_session()` is a
-memory-keeping conversation, and the knitr engines below are just these
-calls wired into a render.
+    A coding agent is an AI system that helps you write, edit, run, and manage code by interacting with files, tools, and tests—like this assistant.
+
+Point it at an extension (`extension = "path/to/index.ts"`) to give the
+agent tools. That is the whole embedding: `pi_run()` is one turn,
+`pi_session()` is a memory-keeping conversation, and the knitr engines
+below are just these calls wired into a render.
 
 ## The `pi` engine — the chunk body is the prompt
 
@@ -71,10 +71,9 @@ pi --model gpt-5.3-codex-spark -p \
   "In one sentence, what is literate programming?"
 ```
 
-> Yes—**literate programming** means writing code as an
-> explanation-first document where human-readable prose and source code
-> are interwoven, so the program is explained as you write it (like in
-> Knuth’s Web, R Markdown, or Jupyter notebooks).
+> Literate programming is a style where you write code as part of a
+> human-readable document (with explanations) and then weave it into
+> executable code.
 
 ## The `pish` engine — fail-loud shell
 
@@ -85,6 +84,31 @@ failure as an answer), and JSON output is fenced for highlighting.
     node --version
     ```
 
+## Set the project root
+
+pi treats its working directory as the **project root** — what scopes
+the agent’s file tools and where relative extension / skill / manifest
+paths resolve. Point any call at a root with `dir`:
+
+``` r
+pi_run(
+  "Count variants by consequence in examples/variant-counts/manifest.json.",
+  dir = "~/pi-bio-agent",
+  extension = "extensions/pi-coding-agent/index.ts"
+)
+```
+
+## Stream the response
+
+Because pi’s `--mode rpc` emits JSON events as they happen,
+`pi_stream()` delivers the reply incrementally — assistant text as
+deltas, every event to a callback — ending on pi’s `agent_end`:
+
+``` r
+pi_stream("Explain content-addressed storage in two sentences.")          # prints as it is typed
+pi_stream("...", on_event = function(ev) if (ev$type == "turn_end") message("done"))
+```
+
 ## A persistent session across chunks
 
 `pi_session()` gives successive turns shared conversation memory (via a
@@ -92,7 +116,7 @@ stable `--session-id`) without holding a long-lived process, so an
 earlier chunk’s result is in scope later:
 
 ``` r
-s <- pi_session(extension = "extensions/pi-coding-agent/index.ts")
+s <- pi_session(dir = "~/pi-bio-agent", extension = "extensions/pi-coding-agent/index.ts")
 s$ask("Load examples/variant-counts/manifest.json and count variants by consequence.")
 s$ask("Now express the same counts as percentages.")  # remembers the table above
 ```
