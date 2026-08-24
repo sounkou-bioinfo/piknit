@@ -13,6 +13,7 @@ pi_run(
   model = NULL,
   provider = NULL,
   extension = NULL,
+  no_extensions = FALSE,
   session = NULL,
   thinking = NULL,
   timeout = 300,
@@ -42,6 +43,11 @@ pi_run(
 
   Optional character vector of extension entrypoints, passed as repeated
   `-e` flags (e.g. a Pi coding-agent extension that exposes tools).
+
+- no_extensions:
+
+  When `TRUE`, disable extension discovery before loading explicit
+  `extension` entrypoints.
 
 - session:
 

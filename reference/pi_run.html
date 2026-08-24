@@ -11,7 +11,7 @@ the pi knitr engine is built on; call it directly for scripting."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">piknit</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,6 +50,7 @@ the <code>pi</code> knitr engine is built on; call it directly for scripting.</p
 <span>  model <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  provider <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  extension <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  no_extensions <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  session <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  thinking <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  timeout <span class="op">=</span> <span class="fl">300</span>,</span>
@@ -80,6 +81,11 @@ then "openai-codex".</p></dd>
 <dt id="arg-extension">extension<a class="anchor" aria-label="anchor" href="#arg-extension"></a></dt>
 <dd><p>Optional character vector of extension entrypoints, passed
 as repeated <code>-e</code> flags (e.g. a Pi coding-agent extension that exposes tools).</p></dd>
+
+
+<dt id="arg-no-extensions">no_extensions<a class="anchor" aria-label="anchor" href="#arg-no-extensions"></a></dt>
+<dd><p>When <code>TRUE</code>, disable extension discovery before loading
+explicit <code>extension</code> entrypoints.</p></dd>
 
 
 <dt id="arg-session">session<a class="anchor" aria-label="anchor" href="#arg-session"></a></dt>
