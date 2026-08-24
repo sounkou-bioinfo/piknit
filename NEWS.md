@@ -1,3 +1,8 @@
+# piknit 0.1.1
+
+* Rendered `pi` commands now pass wrapped prompts as exactly one shell argument
+  and show the provider, thinking, extension, and session options used live.
+
 # piknit 0.1.0
 
 First release.

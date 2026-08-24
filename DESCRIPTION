@@ -1,6 +1,6 @@
 Package: piknit
 Title: Embed the Pi Coding Agent in R
-Version: 0.1.0
+Version: 0.1.1
 Authors@R:
     person("Sounkou Mahamane", "Toure", email = "sounkoutoure@gmail.com",
            role = c("aut", "cre"))
