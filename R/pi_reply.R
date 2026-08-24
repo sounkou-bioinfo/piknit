@@ -19,7 +19,13 @@ NULL
 
 # Construct a pi_reply from raw output lines.
 new_pi_reply <- function(lines, prompt = NULL, model = NULL) {
-  structure(lines, class = "pi_reply", prompt = prompt, model = model)
+  structure(
+    lines,
+    class = "pi_reply",
+    prompt = prompt,
+    model = model,
+    status = attr(lines, "status", exact = TRUE)
+  )
 }
 
 #' @rdname pi_reply

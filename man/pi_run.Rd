@@ -9,6 +9,7 @@ pi_run(
   model = NULL,
   provider = NULL,
   extension = NULL,
+  no_extensions = FALSE,
   session = NULL,
   thinking = NULL,
   timeout = 300,
@@ -28,6 +29,9 @@ then "openai-codex".}
 
 \item{extension}{Optional character vector of extension entrypoints, passed
 as repeated \code{-e} flags (e.g. a Pi coding-agent extension that exposes tools).}
+
+\item{no_extensions}{When \code{TRUE}, disable extension discovery before loading
+explicit \code{extension} entrypoints.}
 
 \item{session}{Optional session id. When set, turns that share the id share
 conversation memory (a persistent session across chunks); when \code{NULL}

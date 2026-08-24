@@ -8,8 +8,11 @@ expect_true(is.function(engines$pish))
 
 # The rendered pi command shows the same execution options and one wrapped prompt.
 old_bin <- Sys.getenv("PIKNIT_PI", unset = NA_character_)
+old_bin_option <- getOption("piknit.bin")
 on.exit(if (is.na(old_bin)) Sys.unsetenv("PIKNIT_PI") else Sys.setenv(PIKNIT_PI = old_bin), add = TRUE)
+on.exit(options(piknit.bin = old_bin_option), add = TRUE)
 Sys.setenv(PIKNIT_PI = "pi-does-not-exist-xyz")
+options(piknit.bin = "pi-does-not-exist-xyz")
 pi_eng <- knitr::knit_engines$get("pi")
 rendered <- as.character(pi_eng(list(
   code = "count the variants by consequence in the declared manifest without using shell tools",
@@ -17,6 +20,7 @@ rendered <- as.character(pi_eng(list(
   model = "gpt-5.4",
   thinking = "medium",
   extension = "./extension/index.ts",
+  no_extensions = TRUE,
   session = NULL,
   timeout = 5,
   dir = NULL
@@ -25,8 +29,24 @@ expect_true(grepl(paste("--provider", shQuote("openai-codex")), rendered, fixed 
 expect_true(grepl(paste("--model", shQuote("gpt-5.4")), rendered, fixed = TRUE))
 expect_true(grepl(paste("--thinking", shQuote("medium")), rendered, fixed = TRUE))
 expect_true(grepl(paste("-e", shQuote("./extension/index.ts")), rendered, fixed = TRUE))
+expect_true(grepl("--no-extensions", rendered, fixed = TRUE))
 expect_true(grepl("--no-session -p", rendered, fixed = TRUE))
 expect_true(grepl("$(printf %s", rendered, fixed = TRUE))
+
+# A nonzero Pi process fails the document render.
+Sys.setenv(PIKNIT_PI = "/bin/false")
+options(piknit.bin = "/bin/false")
+expect_error(suppressWarnings(pi_eng(list(
+  code = "run one turn",
+  provider = "openai-codex",
+  model = "gpt-5.4",
+  thinking = NULL,
+  extension = NULL,
+  no_extensions = FALSE,
+  session = NULL,
+  timeout = 5,
+  dir = NULL
+))), pattern = "pi render failed \\(exit 1\\)")
 
 # pi_run fails soft when the binary is missing (never errors the render)
 out <- pi_run("say ok", pi_bin = "pi-does-not-exist-xyz", timeout = 5)

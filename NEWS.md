@@ -1,3 +1,8 @@
+# piknit 0.1.2
+
+* `pi` cells fail the render when Pi exits nonzero and support
+  `no_extensions=TRUE` for isolated explicit extension loading.
+
 # piknit 0.1.1
 
 * Rendered `pi` commands now pass wrapped prompts as exactly one shell argument

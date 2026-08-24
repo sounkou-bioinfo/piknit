@@ -12,6 +12,8 @@
 #'   then "openai-codex".
 #' @param extension Optional character vector of extension entrypoints, passed
 #'   as repeated `-e` flags (e.g. a Pi coding-agent extension that exposes tools).
+#' @param no_extensions When `TRUE`, disable extension discovery before loading
+#'   explicit `extension` entrypoints.
 #' @param session Optional session id. When set, turns that share the id share
 #'   conversation memory (a persistent session across chunks); when `NULL`
 #'   (default) the turn is ephemeral (`--no-session`). See [pi_session()].
@@ -34,7 +36,7 @@
 #' pi_run("List the files in this directory and summarize them.")
 #' }
 pi_run <- function(prompt, model = NULL, provider = NULL, extension = NULL,
-                   session = NULL, thinking = NULL, timeout = 300,
+                   no_extensions = FALSE, session = NULL, thinking = NULL, timeout = 300,
                    dir = NULL, pi_bin = .pi_bin()) {
   if (!is.null(dir)) {
     old <- setwd(dir)               # pi uses the working directory as its project root
@@ -43,6 +45,7 @@ pi_run <- function(prompt, model = NULL, provider = NULL, extension = NULL,
   model <- model %||% getOption("piknit.model", "gpt-5.3-codex-spark")
   provider <- provider %||% getOption("piknit.provider", "openai-codex")
   args <- c("--provider", provider, "--model", model)
+  if (isTRUE(no_extensions)) args <- c(args, "--no-extensions")
   if (!is.null(thinking)) args <- c(args, "--thinking", thinking)
   for (e in extension) args <- c(args, "-e", e)
   if (is.null(session)) {

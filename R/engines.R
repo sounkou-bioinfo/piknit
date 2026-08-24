@@ -4,6 +4,9 @@
   model <- options$model %||% getOption("piknit.model", "gpt-5.3-codex-spark")
   provider <- options$provider %||% getOption("piknit.provider", "openai-codex")
   args <- c("--provider", shQuote(provider), "--model", shQuote(model))
+  if (isTRUE(options$no_extensions)) {
+    args <- c(args, "--no-extensions")
+  }
   if (!is.null(options$thinking)) {
     args <- c(args, "--thinking", shQuote(options$thinking))
   }
@@ -30,11 +33,20 @@
     model = model,
     provider = options$provider,
     extension = options$extension,
+    no_extensions = isTRUE(options$no_extensions),
     session = options$session,
     thinking = options$thinking,
     timeout = options$timeout %||% 300,
     dir = options$dir
   )
+  status <- attr(out, "status", exact = TRUE)
+  if (!is.null(status) && status != 0) {
+    stop(
+      "pi render failed (exit ", status, "):\n",
+      paste(as.character(out), collapse = "\n"),
+      call. = FALSE
+    )
+  }
   reply <- paste0("> ", gsub("\n", "\n> ", paste(out, collapse = "\n")))
   knitr::asis_output(paste0(cmd, reply, "\n"))
 }
