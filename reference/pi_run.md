@@ -77,7 +77,7 @@ A
 [pi_reply](https://sounkou-bioinfo.github.io/piknit/reference/pi_reply.md)
 — the agent's reply lines (a character vector with a plain-printing
 method), carrying `prompt` and `model` as attributes. On spawn failure
-the reply is the single line "pi unavailable".
+the reply is the single line `"[pi unavailable]"`.
 
 ## See also
 
