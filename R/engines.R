@@ -2,12 +2,28 @@
 .pi_engine <- function(options) {
   prompt <- paste(options$code, collapse = " ")
   model <- options$model %||% getOption("piknit.model", "gpt-5.3-codex-spark")
-  ext <- if (is.null(options$extension)) "" else paste0(" -e ", paste(options$extension, collapse = " -e "))
-  cmd <- paste0("``` sh\n", .pi_bin(), " --model ", model, ext, " -p \\\n", wrap_prompt(prompt), "\n```\n\n")
+  provider <- options$provider %||% getOption("piknit.provider", "openai-codex")
+  args <- c("--provider", shQuote(provider), "--model", shQuote(model))
+  if (!is.null(options$thinking)) {
+    args <- c(args, "--thinking", shQuote(options$thinking))
+  }
+  for (extension in options$extension) {
+    args <- c(args, "-e", shQuote(extension))
+  }
+  if (is.null(options$session)) {
+    args <- c(args, "--no-session")
+  } else {
+    args <- c(args, "--session-id", shQuote(options$session))
+  }
+  command <- paste(c(shQuote(.pi_bin()), args, "-p"), collapse = " ")
+  if (!is.null(options$dir)) {
+    command <- paste0("cd ", shQuote(options$dir), " && ", command)
+  }
+  cmd <- paste0("``` sh\n", command, " \\\n", wrap_prompt(prompt), "\n```\n\n")
   # Where the agent is not on PATH (e.g. CI), don't fail or emit noise: show the
   # command with a note. The document still builds; only the live reply is absent.
   if (!nzchar(Sys.which(.pi_bin()))) {
-    return(knitr::asis_output(paste0(cmd, "> *(pi not on PATH — not run in this environment)*\n")))
+    return(knitr::asis_output(paste0(cmd, "> *(pi not on PATH -- not run in this environment)*\n")))
   }
   out <- pi_run(
     prompt,

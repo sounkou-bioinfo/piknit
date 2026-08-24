@@ -49,7 +49,7 @@ relative to it. The working directory is restored afterwards. \code{NULL}
 \value{
 A \link{pi_reply} — the agent's reply lines (a character vector with a
 plain-printing method), carrying \code{prompt} and \code{model} as attributes. On
-spawn failure the reply is the single line "\link{pi unavailable}".
+spawn failure the reply is the single line \code{"[pi unavailable]"}.
 }
 \description{
 Spawns the Pi CLI in non-interactive print mode (\code{-p}) and returns its reply

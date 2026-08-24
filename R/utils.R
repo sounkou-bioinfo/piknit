@@ -8,10 +8,9 @@
 
 #' Wrap a prompt onto short, runnable shell-string lines
 #'
-#' Splits `prompt` on spaces into adjacent double-quoted shell strings (which a
-#' POSIX shell concatenates) no wider than `width`, each but the last ending in
-#' a line continuation. Used to render a long prompt as a readable, still
-#' runnable, multi-line command.
+#' Splits `prompt` into shell-quoted segments passed to `printf` inside one
+#' command substitution. The displayed command remains readable while the shell
+#' supplies Pi exactly one prompt argument with the original text.
 #'
 #' @param prompt A single prompt string.
 #' @param width Target maximum line width in characters (default 56).
@@ -32,8 +31,13 @@ wrap_prompt <- function(prompt, width = 56) {
     }
   }
   lines <- c(lines, cur)
-  n <- length(lines)
-  paste(vapply(seq_len(n), function(i) {
-    paste0('  "', lines[i], if (i < n) " " else "", '"', if (i < n) " \\" else "")
-  }, character(1)), collapse = "\n")
+  if (length(lines) == 1L) return(paste0("  ", shQuote(prompt)))
+
+  lines[-length(lines)] <- paste0(lines[-length(lines)], " ")
+  quoted <- vapply(lines, shQuote, character(1), type = "sh")
+  rendered <- c(
+    paste0('  "$(printf %s \\'),
+    paste0("    ", quoted, c(rep(" \\", length(quoted) - 1L), ")\""))
+  )
+  paste(rendered, collapse = "\n")
 }

@@ -6,6 +6,28 @@ expect_true("pish" %in% names(engines))
 expect_true(is.function(engines$pi))
 expect_true(is.function(engines$pish))
 
+# The rendered pi command shows the same execution options and one wrapped prompt.
+old_bin <- Sys.getenv("PIKNIT_PI", unset = NA_character_)
+on.exit(if (is.na(old_bin)) Sys.unsetenv("PIKNIT_PI") else Sys.setenv(PIKNIT_PI = old_bin), add = TRUE)
+Sys.setenv(PIKNIT_PI = "pi-does-not-exist-xyz")
+pi_eng <- knitr::knit_engines$get("pi")
+rendered <- as.character(pi_eng(list(
+  code = "count the variants by consequence in the declared manifest without using shell tools",
+  provider = "openai-codex",
+  model = "gpt-5.4",
+  thinking = "medium",
+  extension = "./extension/index.ts",
+  session = NULL,
+  timeout = 5,
+  dir = NULL
+)))
+expect_true(grepl(paste("--provider", shQuote("openai-codex")), rendered, fixed = TRUE))
+expect_true(grepl(paste("--model", shQuote("gpt-5.4")), rendered, fixed = TRUE))
+expect_true(grepl(paste("--thinking", shQuote("medium")), rendered, fixed = TRUE))
+expect_true(grepl(paste("-e", shQuote("./extension/index.ts")), rendered, fixed = TRUE))
+expect_true(grepl("--no-session -p", rendered, fixed = TRUE))
+expect_true(grepl("$(printf %s", rendered, fixed = TRUE))
+
 # pi_run fails soft when the binary is missing (never errors the render)
 out <- pi_run("say ok", pi_bin = "pi-does-not-exist-xyz", timeout = 5)
 expect_true(inherits(out, "pi_reply"))

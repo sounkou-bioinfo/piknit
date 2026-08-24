@@ -15,10 +15,9 @@ wrap_prompt(prompt, width = 56)
 A single string: the wrapped, continuation-joined shell strings.
 }
 \description{
-Splits \code{prompt} on spaces into adjacent double-quoted shell strings (which a
-POSIX shell concatenates) no wider than \code{width}, each but the last ending in
-a line continuation. Used to render a long prompt as a readable, still
-runnable, multi-line command.
+Splits \code{prompt} into shell-quoted segments passed to \code{printf} inside one
+command substitution. The displayed command remains readable while the shell
+supplies Pi exactly one prompt argument with the original text.
 }
 \examples{
 cat(wrap_prompt("count the variants by consequence in the manifest", 24))

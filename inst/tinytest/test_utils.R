@@ -1,12 +1,26 @@
-# wrap_prompt: lines stay within width and remain a runnable shell string
-w <- wrap_prompt("count the variants by consequence in the manifest", width = 24)
-lines <- strsplit(w, "\n")[[1]]
-expect_true(all(grepl('"', lines)))                          # each line is a quoted shell string
-expect_true(all(grepl("\\\\$", lines[-length(lines)])))      # all but last end in a continuation
-expect_false(grepl("\\\\$", lines[length(lines)]))           # last line has no continuation
-joined <- gsub('[\\\\" ]+', " ", w)                          # words survive the round-trip
-expect_true(grepl("consequence", joined))
-expect_true(grepl("manifest", joined))
+check_wrapped_prompt <- function(prompt, width) {
+  wrapped <- wrap_prompt(prompt, width = width)
+  script <- tempfile(fileext = ".sh")
+  on.exit(unlink(script), add = TRUE)
+  writeLines(c(
+    "#!/bin/sh",
+    paste0("set -- ", wrapped),
+    '[ "$#" -eq 1 ] || exit 10',
+    paste0('[ "$1" = ', shQuote(prompt, type = "sh"), ' ] || exit 11')
+  ), script)
+  expect_equal(system2("sh", script), 0L)
+  wrapped
+}
 
-# a single short prompt is one quoted string
-expect_equal(wrap_prompt("hello", width = 56), '  "hello"')
+# A wrapped prompt remains exactly one shell argument.
+prompt <- "count the variants by consequence in the manifest"
+w <- check_wrapped_prompt(prompt, width = 24)
+expect_true(grepl("printf %s", w, fixed = TRUE))
+expect_true(grepl("\\\n", w))
+
+# Shell metacharacters and both quote styles survive unchanged.
+check_wrapped_prompt("It's \"quoted\" with $HOME and (parentheses)", width = 16)
+
+# A single short prompt remains one quoted shell word.
+expect_equal(wrap_prompt("hello", width = 56), paste0("  ", shQuote("hello")))
+check_wrapped_prompt("hello", width = 56)

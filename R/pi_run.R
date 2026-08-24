@@ -26,7 +26,7 @@
 #'   `PIKNIT_PI` / "pi").
 #' @return A [pi_reply] — the agent's reply lines (a character vector with a
 #'   plain-printing method), carrying `prompt` and `model` as attributes. On
-#'   spawn failure the reply is the single line "[pi unavailable]".
+#'   spawn failure the reply is the single line `"[pi unavailable]"`.
 #' @seealso [pi_session()] for multi-turn continuity.
 #' @export
 #' @examples
